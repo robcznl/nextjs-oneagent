@@ -15,20 +15,6 @@ for %%I in ("%SCRIPT_DIR%..") do set "REPO_ROOT=%%~fI"
 
 pushd "%REPO_ROOT%" || exit /b 1
 
-set "SIDECAR_IMAGE="
-for /f "usebackq delims=" %%I in (`az resource show --resource-group "%RESOURCE_GROUP%" --resource-type "Microsoft.Web/sites/sitecontainers" --name "%APP_NAME%/dynatrace-oneagent" --api-version "2024-04-01" --query "properties.image" --output tsv 2^>nul`) do set "SIDECAR_IMAGE=%%I"
-
-if /I "%SIDECAR_IMAGE%"=="dynatrace/dynatrace-codemodules:latest" (
-  echo ERROR: Azure still has the nonexistent Dynatrace sidecar image:
-  echo   %SIDECAR_IMAGE%
-  echo.
-  echo Apply infra\main.bicep before running this zip deployment:
-  echo   az deployment group create --resource-group "%RESOURCE_GROUP%" --template-file infra\main.bicep --parameters infra\main.bicepparam --parameters dtTenantToken="YOUR_TENANT_TOKEN"
-  goto failed
-)
-
-if defined SIDECAR_IMAGE echo Live Dynatrace sidecar image: %SIDECAR_IMAGE%
-
 echo Installing dependencies...
 call npm ci
 if errorlevel 1 goto failed
@@ -55,7 +41,7 @@ echo Deploying zip to App Service "%APP_NAME%" in resource group "%RESOURCE_GROU
 call az webapp deploy --resource-group "%RESOURCE_GROUP%" --name "%APP_NAME%" --src-path "%ZIP_PATH%" --type zip
 if errorlevel 1 goto failed
 
-echo Deployment complete. If you also just changed sidecar or app settings, restart the app:
+echo Deployment complete. If you also just changed app settings ^(OTEL_* variables^), restart the app:
 echo   az webapp restart --resource-group "%RESOURCE_GROUP%" --name "%APP_NAME%"
 
 popd
