@@ -56,7 +56,7 @@ try {
     --src-path $zipPath `
     --type zip
 
-  Write-Host "Deployment complete. Restart the app if you also just changed sidecar/app settings:" -ForegroundColor Green
+  Write-Host "Deployment complete. Restart the app if you also just changed app settings (OTEL_* variables):" -ForegroundColor Green
   Write-Host "  az webapp restart --resource-group $ResourceGroup --name $AppName" -ForegroundColor Green
 }
 finally {

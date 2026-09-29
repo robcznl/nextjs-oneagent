@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Next.js + Dynatrace OneAgent sample",
-  description: "Sample Next.js app on Azure App Service with Dynatrace OneAgent sidecar",
+  title: "Next.js + Dynatrace OpenTelemetry sample",
+  description:
+    "Sample Next.js app on Azure App Service exporting OpenTelemetry traces to Dynatrace via instrumentation.ts",
 };
 
 export default function RootLayout({

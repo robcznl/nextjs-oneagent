@@ -15,7 +15,6 @@ if (!existsSync(standaloneDir)) {
 const copies = [
   { from: join(root, "public"), to: join(standaloneDir, "public") },
   { from: join(root, ".next", "static"), to: join(standaloneDir, ".next", "static") },
-  { from: join(root, "startup.mjs"), to: join(standaloneDir, "startup.mjs") },
 ];
 
 for (const { from, to } of copies) {
